@@ -26,25 +26,26 @@ def refactorString(playersData):
   x=1
   playerDict = {}
   for word in split:
-      word = word.translate({ord('/'):None})
-      word = word.translate({ord(':'):None})
-      word = word.translate({ord('{'):None})
-      word = word.translate({ord('}'):None})
-      word = word.translate({ord('['):None})
-      word = word.translate({ord(']'):None})
-      word = word.translate({ord(','):None})
-      word = word.translate({ord("'"):None})
-      #print(word)
-      if(word == 'realname'):
-          x = 0
-      if(word == 'personclanid'):
-          x=1
-      if(count %2==0 and x ==1):
-          temp = word
-      
-      elif(count %2 !=0 and x == 1):
-          playerDict[temp] = word
-      count+=1
+    word = word.translate({ord('{'):None})
+    word = word.translate({ord('}'):None})
+    word = word.translate({ord('['):None})
+    word = word.translate({ord(']'):None})
+    word = word.translate({ord(','):None})
+    word = word.translate({ord("'"):None})
+    if(word[-1] == ':'):
+        word = word[:-1]
+    #print(word)
+    if(word == 'realname'):
+        x = 0
+    if(word == 'personclanid'):
+        x=1
+    if(count %2==0 and x ==1):
+        temp = word
+    
+    elif(count %2 !=0 and x == 1):
+        playerDict[temp] = word
+    count+=1
+            
 
   return playerDict
 
@@ -65,11 +66,11 @@ async def find(ctx,arg):
     playerDict = refactorString(playersData)
     embed = discord.Embed(
       title = playerDict['personaname'],
-      description= "Steam data of "+  playerDict['personaname'],
-      color = discord.Color.dark_green()
+      description= "Steam data of "+  playerDict['personaname'] + '\nUsername : ' + playerDict['personaname'] + '\nProfile URL ' + playerDict['profileurl'] + '\n ',
+      color = discord.Color.red()
     )
-    print( playerDict['avatar'])
-    embed.set_thumbnail(url ='https://cdn.freebiesupply.com/images/large/2x/steam-logo-transparent.png')
+    #print( playerDict['avatar'])
+    embed.set_thumbnail(url =playerDict['avatarfull'])
     await ctx.send(embed = embed)
 
     
