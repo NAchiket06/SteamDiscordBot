@@ -28,7 +28,7 @@ async def find(ctx,arg):
     await ctx.send(embed = embed)
   
 @bot.command()
-async def crypto(ctx):
+async def crp(ctx):
     df = cp.getData()
     cryp_name = df["coin_name"]
     cryp_symbol = df['coin_symbol']
