@@ -3,4 +3,3 @@ dnspython == 2.1.0
 pandas
 discord
 requests 
-json
