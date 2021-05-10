@@ -2,79 +2,97 @@ import os
 import discord
 import requests
 import json
+import steam as st
+import crypt as cp
 
 from discord.ext import commands
-
-def getSteamid(username):
-  req = requests.get('https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=F6086DBECB8E52EE9F423E64BDE57573&vanityurl='+username)
-  
-  json_data = req.json() # gets json data of steamid of given username
-  id = json_data['response']["steamid"]
-  return id
-
-def getSteamDetails(steamid):
-
-    req = requests.get('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=F6086DBECB8E52EE9F423E64BDE57573&steamids='+steamid)
-
-    steam_data = req.json()
-    return steam_data
-  
-def refactorString(playersData):
-  
-  split = playersData.split()
-  count=0
-  x=1
-  playerDict = {}
-  for word in split:
-    word = word.translate({ord('{'):None})
-    word = word.translate({ord('}'):None})
-    word = word.translate({ord('['):None})
-    word = word.translate({ord(']'):None})
-    word = word.translate({ord(','):None})
-    word = word.translate({ord("'"):None})
-    if(word[-1] == ':'):
-        word = word[:-1]
-    #print(word)
-    if(word == 'realname'):
-        x = 0
-    if(word == 'personclanid'):
-        x=1
-    if(count %2==0 and x ==1):
-        temp = word
-    
-    elif(count %2 !=0 and x == 1):
-        playerDict[temp] = word
-    count+=1
-            
-
-  return playerDict
-
 
 bot = commands.Bot(command_prefix='.')
 
 @bot.command()
 
 async def find(ctx,arg):
-
-    req = requests.get('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=F6086DBECB8E52EE9F423E64BDE57573&steamids='+arg)
-    #print("\n\n raw json data\n")
-    json_data = req.json()
-    #print(json_data)
-
+    #get public data of user acc to his steam id
+    json_data = st.getSteamDetails(arg)
+    #get only required data from the public data
     playersData = str(json_data['response']['players'])
-    
-    playerDict = refactorString(playersData)
+    #convert the string data type to dictionary
+    playerDict = st.refactorString(playersData)
+    #print the data
     embed = discord.Embed(
       title = playerDict['personaname'],
       description= "Steam data of "+  playerDict['personaname'] + '\nUsername : ' + playerDict['personaname'] + '\nProfile URL ' + playerDict['profileurl'] + '\n ',
       color = discord.Color.red()
     )
-    #print( playerDict['avatar'])
     embed.set_thumbnail(url =playerDict['avatarfull'])
     await ctx.send(embed = embed)
+  
+@bot.command()
+async def crypto(ctx):
+    df = cp.getData()
+    cryp_name = df["coin_name"]
+    cryp_symbol = df['coin_symbol']
+    price = df['price']
+    change1h = df['percent_change_1h']
+    change24h = df['percent_change_24h']
+    change7d = df['percent_change_7d']
 
+    desc = ""
+    for i in range(5):
+      desc += cryp_name[i] +  "\t" + cryp_symbol[i] +  "\t" + str(price[i]) +  "\t" + str(change1h[i]) + "\t" + str(change24h[i]) +  "\t" + str(change7d[i]) +'\n'
+
+
+    embed1=discord.Embed(color=0x009dff)
+    embed1.add_field(name="1",value=".",inline=False)
+    embed1.add_field(name="**Name**", value=cryp_name[0], inline=True)
+    embed1.add_field(name="Symbol", value=cryp_symbol[0], inline=True)
+    embed1.add_field(name="Price", value=str(price[0]) + " $", inline=True)
+    embed1.add_field(name="%Change 1H", value=str(change1h[0]), inline=True)
+    embed1.add_field(name="%Change 24H", value=str(change24h[0]), inline=True)
+    embed1.add_field(name="%Change 7D", value=str(change7d[0]), inline=True)
     
+    await ctx.send(embed=embed1)
 
+    embed2=discord.Embed(color=0x009dff)
+    embed2.add_field(name="**Name**", value=cryp_name[1], inline=True)
+    embed2.add_field(name="Symbol", value=cryp_symbol[1], inline=True)
+    embed2.add_field(name="Price", value=str(price[1]) + " $", inline=True)
+    embed2.add_field(name="%Change 1H", value=str(change1h[1]), inline=True)
+    embed2.add_field(name="%Change 24H", value=str(change24h[1]), inline=True)
+    embed2.add_field(name="%Change 7D", value=str(change7d[1]), inline=True)
+
+    await ctx.send(embed=embed2)
+
+    embed3=discord.Embed(color=0x009dff)
+    embed3.add_field(name="**Name**", value=cryp_name[2], inline=True)
+    embed3.add_field(name="Symbol", value=cryp_symbol[2], inline=True)
+    embed3.add_field(name="Price", value=str(price[2]) + " $", inline=True)
+    embed3.add_field(name="%Change 1H", value=str(change1h[2]), inline=True)
+    embed3.add_field(name="%Change 24H", value=str(change24h[2]), inline=True)
+    embed3.add_field(name="%Change 7D", value=str(change7d[2]), inline=True)
+
+    await ctx.send(embed=embed3)
+
+    embed4=discord.Embed(color=0x009dff)
+    embed4.add_field(name="**Name**", value=cryp_name[3], inline=True)
+    embed4.add_field(name="Symbol", value=cryp_symbol[3], inline=True)
+    embed4.add_field(name="Price", value=str(price[3]) + " $", inline=True)
+    embed4.add_field(name="%Change 1H", value=str(change1h[3]), inline=True)
+    embed4.add_field(name="%Change 24H", value=str(change24h[3]), inline=True)
+    embed4.add_field(name="%Change 7D", value=str(change7d[3]), inline=True)
+
+    await ctx.send(embed=embed4)
+
+    embed5=discord.Embed(color=0x009dff)
+    embed5.add_field(name="**Name**", value=cryp_name[4], inline=True)
+    embed5.add_field(name="Symbol", value=cryp_symbol[4], inline=True)
+    embed5.add_field(name="Price", value=str(price[4]) + " $", inline=True)
+    embed5.add_field(name="%Change 1H", value=str(change1h[4]), inline=True)
+    embed5.add_field(name="%Change 24H", value=str(change24h[4]), inline=True)
+    embed5.add_field(name="%Change 7D", value=str(change7d[4]), inline=True)
+    embed5.set_footer(text="*data based on [CoinMarketCap](https://coinmarketcap.com)")
+    
+    await ctx.send(embed=embed5)
 
 
 bot.run(os.environ['token'])
