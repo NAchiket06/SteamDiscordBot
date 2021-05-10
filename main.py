@@ -42,8 +42,7 @@ async def crypto(ctx):
       desc += cryp_name[i] +  "\t" + cryp_symbol[i] +  "\t" + str(price[i]) +  "\t" + str(change1h[i]) + "\t" + str(change24h[i]) +  "\t" + str(change7d[i]) +'\n'
 
 
-    embed1=discord.Embed(color=0x009dff)
-    embed1.add_field(name="1",value=".",inline=False)
+    embed1=discord.Embed(color=0xd50101 if change24h[0]<0 else 0x00ff11)
     embed1.add_field(name="**Name**", value=cryp_name[0], inline=True)
     embed1.add_field(name="Symbol", value=cryp_symbol[0], inline=True)
     embed1.add_field(name="Price", value=str(price[0]) + " $", inline=True)
@@ -53,7 +52,7 @@ async def crypto(ctx):
     
     await ctx.send(embed=embed1)
 
-    embed2=discord.Embed(color=0x009dff)
+    embed2=discord.Embed(color=0xd50101 if change24h[1]<0 else 0x00ff11)
     embed2.add_field(name="**Name**", value=cryp_name[1], inline=True)
     embed2.add_field(name="Symbol", value=cryp_symbol[1], inline=True)
     embed2.add_field(name="Price", value=str(price[1]) + " $", inline=True)
@@ -63,7 +62,7 @@ async def crypto(ctx):
 
     await ctx.send(embed=embed2)
 
-    embed3=discord.Embed(color=0x009dff)
+    embed3=discord.Embed(color=0xd50101 if change24h[2]<0 else 0x00ff11)
     embed3.add_field(name="**Name**", value=cryp_name[2], inline=True)
     embed3.add_field(name="Symbol", value=cryp_symbol[2], inline=True)
     embed3.add_field(name="Price", value=str(price[2]) + " $", inline=True)
@@ -73,7 +72,7 @@ async def crypto(ctx):
 
     await ctx.send(embed=embed3)
 
-    embed4=discord.Embed(color=0x009dff)
+    embed4=discord.Embed(color=0xd50101 if change24h[3]<0 else 0x00ff11)
     embed4.add_field(name="**Name**", value=cryp_name[3], inline=True)
     embed4.add_field(name="Symbol", value=cryp_symbol[3], inline=True)
     embed4.add_field(name="Price", value=str(price[3]) + " $", inline=True)
@@ -83,9 +82,9 @@ async def crypto(ctx):
 
     await ctx.send(embed=embed4)
 
-    embed5=discord.Embed(color=0x009dff)
+    embed5=discord.Embed(color=0xd50101 if change24h[4]<0 else 0x00ff11)
     embed5.add_field(name="**Name**", value=cryp_name[4], inline=True)
-    embed5.add_field(name="Symbol", value=cryp_symbol[4], inline=True)
+    embed5.add_field(name="Symbol", value=cryp_symbol[4]+ "          ", inline=True)
     embed5.add_field(name="Price", value=str(price[4]) + " $", inline=True)
     embed5.add_field(name="%Change 1H", value=str(change1h[4]), inline=True)
     embed5.add_field(name="%Change 24H", value=str(change24h[4]), inline=True)
