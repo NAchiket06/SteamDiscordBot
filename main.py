@@ -4,6 +4,7 @@ import requests
 import json
 import steam as st
 import crypt as cp
+from keep_alive import keep_alive
 
 from discord.ext import commands
 
@@ -12,6 +13,10 @@ bot = commands.Bot(command_prefix='.')
 @bot.command()
 
 async def find(ctx,arg):
+
+    if(arg == ""):
+        await ctx.send("Provide a steam64ID.")
+        return
     #get public data of user acc to his steam id
     json_data = st.getSteamDetails(arg)
     #get only required data from the public data
@@ -93,6 +98,6 @@ async def crp(ctx):
     
     await ctx.send(embed=embed5)
 
-
+keep_alive()
 bot.run(os.environ['token'])
 
