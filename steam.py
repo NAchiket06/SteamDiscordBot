@@ -1,5 +1,8 @@
 import requests
+import array as arr
+from replit import db
 
+lastprice =0;
 
 #returns json format of player's public data 
 def getSteamDetails(steamid):
@@ -40,3 +43,67 @@ def refactorString(playersData):
             
 
   return playerDict
+
+
+
+def marketPrice(itemname):
+  req = requests.get('http://steamcommunity.com/market/priceoverview/?appid=730&currency=24&market_hash_name=' + itemname)
+
+  json_data = req.json()
+  if(len(json_data) == 1 ):
+    print('invalid')
+    return -1
+  price = json_data['lowest_price']
+  return price
+
+
+
+def checkItemExists(itemName):
+  req = requests.get('http://steamcommunity.com/market/priceoverview/?appid=730&currency=24&market_hash_name=' + itemName)
+
+  json_data = req.json()
+  if(len(json_data) ==1 ):
+      return False
+
+  else: 
+      return True
+
+
+def AddItemToDatabase(itemName):
+  
+  itemName = itemName[:-1]
+    
+  if 'MarketItemList' in db.keys():
+    if(itemName in db['MarketItemList']):
+      print('Item already added.')
+      return False
+    itemList = db['MarketItemList']
+    itemList.append(itemName)
+    db['MarketItemList'] = itemList
+  
+  else: 
+    db['MarketItemList'] = [itemName]
+  
+  print(db['MarketItemList'])
+  return True
+
+
+def ClearList():
+  del(db['MarketItemList'])
+  print(db['MarketItemList'])
+
+def removeItemFromList(itemName):
+  if 'MarketItemList' in db.keys():
+    itemList = db['MarketItemList']
+    itemList.remove('itemName')
+    db['MarketItemList'] = itemList
+    return 1
+  else:
+    return -1
+
+
+def returnList():
+  if 'MarketItemList' in db.keys():
+    return db['MarketItemList']
+  else:
+     return -1

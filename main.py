@@ -10,6 +10,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='.')
 
+
 @bot.command()
 
 async def find(ctx,arg):
@@ -97,6 +98,62 @@ async def crp(ctx):
     embed5.set_footer(text="*data based on [CoinMarketCap](https://coinmarketcap.com)")
     
     await ctx.send(embed=embed5)
+
+    embed6=discord.Embed(color=0xd50101 if change24h[4]<0 else 0x00ff11)
+    embed6.set_footer(text="*data based on [CoinMarketCap](https://coinmarketcap.com)")
+    
+    await ctx.send(embed=embed6)
+
+itemsList=[]
+
+@bot.command()
+async def price(ctx,*args):
+    itemList = st.returnList()
+    if itemList == -1:
+      await ctx.send('No items added in List.')
+      return
+    for item in itemList:
+      price = st.marketPrice(item)
+      embed=discord.Embed(color=0xfec320)
+      embed.add_field(name="**Name**", value=item+"           " , inline=True)
+      embed.add_field(name="**Price**", value=price, inline=True)
+      await ctx.send(embed=embed)
+
+
+@bot.command()
+async def addItem(ctx,*args):
+
+  s=""
+  for x in args: 
+    s += x + " "
+
+  if(st.checkItemExists(s)):
+    if st.AddItemToDatabase(s):
+      await ctx.send("Successfully added '"+s+ "' to items list.")
+    else:
+      await ctx.send("Item already present in list.")
+
+  else: 
+    await ctx.send("Item does not exist in the market.")
+
+@bot.command()
+async def view(ctx):
+  itemList = st.returnList()
+  await ctx.send(itemList)
+  
+""""
+NEED TO WORK ON
+idea: Remove item from index
+@bot.command()
+async def removeItem(ctx,*args):
+
+  x = st.removeItemFromList(s)
+"""
+
+@bot.command()
+async def clearList(ctx):
+  st.ClearList()
+
 
 keep_alive()
 bot.run(os.environ['token'])

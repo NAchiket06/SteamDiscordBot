@@ -10,6 +10,7 @@ discord = "^1.0.1"
 bs4 = "^0.0.1"
 pandas = "^1.2.4"
 flask = "^1.1.2"
+replit = "^3.0.0"
 
 [tool.poetry.dev-dependencies]
 
