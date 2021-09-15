@@ -6,6 +6,7 @@ import steam as st
 import crypt as cp
 from keep_alive import keep_alive
 
+from discord.ext import tasks
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='.')
@@ -154,7 +155,11 @@ async def removeItem(ctx,*args):
 async def clearList(ctx):
   st.ClearList()
 
+@tasks.loop(seconds=10)
+async def send_message():
+    await bot.get_channel(840999243443601418).send("Automated message")
 
+    
 keep_alive()
 bot.run(os.environ['token'])
 
