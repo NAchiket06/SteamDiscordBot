@@ -12,8 +12,11 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix='.')
 
 
-@bot.command()
+@bot.event
+async def on_ready():
+  send_message.start()
 
+@bot.command()
 async def find(ctx,arg):
 
     if(arg == ""):
@@ -159,7 +162,7 @@ async def clearList(ctx):
 async def send_message():
     await bot.get_channel(840999243443601418).send("Automated message")
 
-    
+
 keep_alive()
 bot.run(os.environ['token'])
 
