@@ -12,9 +12,16 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix='.')
 
 
+# BOT START EVENTS
 @bot.event
-async def on_ready():
+async def on_ready(ctx):
   send_message.start()
+  await bot.get_channel(840999243443601418).send("Bot Online")
+
+###############################################################################
+#FIND COMMAND: 
+#     FINDS THE STEAM PROFILE OF THE GIVEN STEAM64 ID
+###############################################################################
 
 @bot.command()
 async def find(ctx,arg):
@@ -37,6 +44,10 @@ async def find(ctx,arg):
     embed.set_thumbnail(url =playerDict['avatarfull'])
     await ctx.send(embed = embed)
   
+###############################################################################
+# CRP: 
+#   CRYPTO COMMAND THAT RETURNTS THE TOP 5 CRYPTO 
+###############################################################################
 @bot.command()
 async def crp(ctx):
     df = cp.getData()
@@ -108,22 +119,34 @@ async def crp(ctx):
     
     await ctx.send(embed=embed6)
 
+
+
 itemsList=[]
 
+###############################################################################
+#PRICE: 
+#   RETURNS THE PRICE OF STEAM ITEMS THAT ARE ADDED IN ITEMS LIST
+#   .price
+###############################################################################
 @bot.command()
 async def price(ctx,*args):
-    itemList = st.returnList()
-    if itemList == -1:
-      await ctx.send('No items added in List.')
-      return
-    for item in itemList:
-      price = st.marketPrice(item)
-      embed=discord.Embed(color=0xfec320)
-      embed.add_field(name="**Name**", value=item+"           " , inline=True)
-      embed.add_field(name="**Price**", value=price, inline=True)
-      await ctx.send(embed=embed)
+  itemList = st.returnList()
+  if itemList == -1:
+    await ctx.send('No items added in List.')
+    return
+  for item in itemList:
+    price = st.marketPrice(item)
+    embed=discord.Embed(color=0xfec320)
+    embed.add_field(name="**Name**", value=item+"           " , inline=True)
+    embed.add_field(name="**Price**", value=price, inline=True)
+    await ctx.send(embed=embed)
 
 
+###############################################################################
+#ADDITEM:
+#   ADDS ITEM THE LIST 
+#   .add item_name
+###############################################################################
 @bot.command()
 async def addItem(ctx,*args):
 
@@ -140,6 +163,12 @@ async def addItem(ctx,*args):
   else: 
     await ctx.send("Item does not exist in the market.")
 
+
+###############################################################################
+#VIEW
+#   VIEWS THE CURRENT LIST OF ITEMS
+#   .view
+###############################################################################
 @bot.command()
 async def view(ctx):
   itemList = st.returnList()
@@ -154,13 +183,43 @@ async def removeItem(ctx,*args):
   x = st.removeItemFromList(s)
 """
 
+
+###############################################################################
+#CLEARLIST
+#   CLEARS THE ITEM LIST
+#   .clearList
+###############################################################################
 @bot.command()
 async def clearList(ctx):
   st.ClearList()
 
+@bot.command()
+async def setRem(ctx,*args):
+  await ctx.send("Command Currently in work!!")
+
+###############################################################################
+# LOOPING FUNCTION
+#  CHECKS VALUE OF ITEMS EVERY 10 SECONDS AND SENDS MESSAGE IF THE VALUE 
+#  EXEEDS THE PRICE
+###############################################################################
+
+
 @tasks.loop(seconds=10)
 async def send_message():
+    await bot.get_channel(840999243443601418).send("Here are the hourly updated prices.")
+    itemList = st.returnList()
+    if itemList == -1:
+      #await bot.get_channel(840999243443601418).send("No Items in List.")
+      return
+    for item in itemList:
+      price = st.marketPrice(item)
+      embed=discord.Embed(color=0xfec320)
+      embed.add_field(name="**Name**", value=item+"           " , inline=True)
+      embed.add_field(name="**Price**", value=price, inline=True)
+      await bot.get_channel(840999243443601418).send(embed=embed)
+      #await ctx.send(embed=embed)
     await bot.get_channel(840999243443601418).send("Automated message")
+
 
 
 keep_alive()
